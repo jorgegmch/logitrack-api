@@ -1,5 +1,7 @@
 package com.jorgegmch.logitrack.entity.enums;
 
-public class TipoMovimiento {
-
+public enum TipoMovimiento {
+    ENTRADA,
+    SALIDA,
+    TRANSFERENCIA
 }

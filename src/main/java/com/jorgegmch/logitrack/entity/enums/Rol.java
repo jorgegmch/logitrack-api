@@ -1,5 +1,6 @@
 package com.jorgegmch.logitrack.entity.enums;
 
-public class Rol {
-
+public enum Rol {
+    ADMIN,
+    EMPLEADO
 }

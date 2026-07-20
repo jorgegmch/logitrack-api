@@ -1,5 +1,7 @@
 package com.jorgegmch.logitrack.entity.enums;
 
-public class TipoOperacion {
-
+public enum TipoOperacion {
+    INSERT,
+    UPDATE,
+    DELETE
 }
