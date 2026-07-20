@@ -1,5 +1,34 @@
 package com.jorgegmch.logitrack.entity;
 
-public class Producto {
+import java.math.BigDecimal;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table(name = "producto")
+@Data
+@EqualsAndHashCode(of = "idProducto")
+@NoArgsConstructor
+@AllArgsConstructor
+public class Producto {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idProducto;
+
+    @Column(nullable = false)
+    private String nombre;
+
+    private String categoria;
+
+    @Column(nullable = false)
+    private BigDecimal precio;
 }
