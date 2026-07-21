@@ -1,5 +1,9 @@
 package com.jorgegmch.logitrack.repository;
 
-public class AuditoriaRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.jorgegmch.logitrack.entity.Auditoria;
+
+public interface AuditoriaRepository extends JpaRepository<Auditoria, Long> {
 
 }
