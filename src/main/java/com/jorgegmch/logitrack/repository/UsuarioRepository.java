@@ -1,5 +1,11 @@
 package com.jorgegmch.logitrack.repository;
 
-public class UsuarioRepository {
+import java.util.Optional;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.jorgegmch.logitrack.entity.Usuario;
+
+public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
+    Optional<Usuario> findByUsername(String username);
 }
