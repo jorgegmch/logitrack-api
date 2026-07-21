@@ -1,5 +1,9 @@
 package com.jorgegmch.logitrack.repository;
 
-public class ProductoRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.jorgegmch.logitrack.entity.Producto;
+
+public interface ProductoRepository extends JpaRepository<Producto, Long> {
 
 }
