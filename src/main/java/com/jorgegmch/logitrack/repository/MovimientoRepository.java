@@ -1,5 +1,9 @@
 package com.jorgegmch.logitrack.repository;
 
-public class MovimientoRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.jorgegmch.logitrack.entity.Movimiento;
+
+public interface MovimientoRepository extends JpaRepository<Movimiento, Long> {
 
 }
