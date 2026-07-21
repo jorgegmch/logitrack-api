@@ -22,6 +22,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "movimiento")
@@ -54,5 +55,6 @@ public class Movimiento {
     private Bodega bodegaDestinoId;
 
     @OneToMany(mappedBy = "movimiento", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private List<DetalleMovimiento> detalles = new ArrayList<>();
 }
