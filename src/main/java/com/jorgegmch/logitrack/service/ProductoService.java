@@ -21,6 +21,9 @@ public class ProductoService {
     }
 
     public Producto buscarProductoPorId(Long id) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("El id debe ser un número positivo");
+        }
         Producto producto = productoRepository.findById(id).orElse(null);
         if (producto == null) {
             throw new RuntimeException("Producto no encontrado con id: " + id);
