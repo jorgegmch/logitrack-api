@@ -1,5 +1,56 @@
 package com.jorgegmch.logitrack.controller;
 
-public class MovimientoController {
+import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.jorgegmch.logitrack.dto.MovimientoRequest;
+import com.jorgegmch.logitrack.entity.Movimiento;
+import com.jorgegmch.logitrack.service.MovimientoService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+
+@RestController
+@RequestMapping("/movimientos")
+@Tag(name = "Movimientos", description = "Registro y consulta de movimientos de inventario")
+public class MovimientoController {
+    private final MovimientoService movimientoService;
+
+    public MovimientoController(MovimientoService movimientoService) {
+        this.movimientoService = movimientoService;
+    }
+
+    @Operation(summary = "Listar todos los movimientos")
+    @GetMapping
+    public List<Movimiento> listar() {
+        return movimientoService.listarMovimientos();
+    }
+
+    @Operation(summary = "Buscar un movimiento por su id")
+    @ApiResponse(responseCode = "200", description = "Movimiento encontrado")
+    @ApiResponse(responseCode = "404", description = "Movimiento no encontrado")
+    @GetMapping("/{id}")
+    public Movimiento buscarPorId(@PathVariable("id") Long id) {
+        return movimientoService.buscarMovimientoPorId(id);
+    }
+
+    @Operation(summary = "Registrar un nuevo movimiento (entrada, salida o transferencia)")
+    @ApiResponse(responseCode = "201", description = "Movimiento registrado exitosamente")
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping
+    public Movimiento registrar(@Valid @RequestBody MovimientoRequest request) {
+        return movimientoService.registrarMovimiento(request.getTipo(), request.getUsuarioId(),
+                request.getBodegaOrigenId(), request.getBodegaDestinoId(),
+                request.getProductoIds(), request.getCantidades());
+    }
 }
