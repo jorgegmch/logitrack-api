@@ -53,39 +53,39 @@ public class BodegaService {
         }
 
         return bodegaRepository.save(new Bodega(null, nombre.trim().toUpperCase(), ubicacion.trim().toUpperCase(), capacidad, encargado));
+    }
+
+    public Bodega actualizarBodega(Long id, String nombre, String ubicacion, Integer capacidad, Long encargadoId) {
+        Bodega bodega = buscarBodegaPorId(id);
+
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("La bodega debe tener un nombre");
+        }
+        if (ubicacion == null || ubicacion.trim().isEmpty()) {
+            throw new IllegalArgumentException("La bodega debe tener una ubicacion");
+        }
+        if (capacidad == null || capacidad <= 0) {
+            throw new IllegalArgumentException("La capacidad de una bodega debe ser mayor a cero");
         }
 
-        public Bodega actualizarBodega(Long id, String nombre, String ubicacion, Integer capacidad, Long encargadoId) {
-            Bodega bodega = buscarBodegaPorId(id);
-
-            if (nombre == null || nombre.trim().isEmpty()) {
-                throw new IllegalArgumentException("La bodega debe tener un nombre");
+        Usuario encargado = null;
+        if (encargadoId != null) {
+            encargado = usuarioRepository.findById(encargadoId).orElse(null);
+            if (encargado == null) {
+                throw new RuntimeException("Usuario encargado no encontrado con id: " + encargadoId);
             }
-            if (ubicacion == null || ubicacion.trim().isEmpty()) {
-                throw new IllegalArgumentException("La bodega debe tener una ubicacion");
-            }
-            if (capacidad == null || capacidad <= 0) {
-                throw new IllegalArgumentException("La capacidad de una bodega debe ser mayor a cero");
-            }
-
-            Usuario encargado = null;
-            if (encargadoId != null) {
-                encargado = usuarioRepository.findById(encargadoId).orElse(null);
-                if (encargado == null) {
-                    throw new RuntimeException("Usuario encargado no encontrado con id: " + encargadoId);
-                }
-            }
-
-            bodega.setNombre(nombre.trim().toUpperCase());
-            bodega.setUbicacion(ubicacion.trim().toUpperCase());
-            bodega.setCapacidad(capacidad);
-            bodega.setEncargadoId(encargado);
-
-            return bodegaRepository.save(bodega);
         }
 
-        public void eliminarBodega(Long id) {
-            buscarBodegaPorId(id);
-            bodegaRepository.deleteById(id);
-        }
+        bodega.setNombre(nombre.trim().toUpperCase());
+        bodega.setUbicacion(ubicacion.trim().toUpperCase());
+        bodega.setCapacidad(capacidad);
+        bodega.setEncargadoId(encargado);
+
+        return bodegaRepository.save(bodega);
+    }
+
+    public void eliminarBodega(Long id) {
+        buscarBodegaPorId(id);
+        bodegaRepository.deleteById(id);
+    }
 }
