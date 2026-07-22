@@ -2,24 +2,18 @@ package com.jorgegmch.logitrack.controller;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jorgegmch.logitrack.dto.UsuarioRegisterRequest;
 import com.jorgegmch.logitrack.entity.Usuario;
 import com.jorgegmch.logitrack.service.UsuarioService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -43,14 +37,6 @@ public class UsuarioController {
     @GetMapping("/{id}")
     public Usuario buscarPorId(@PathVariable("id") Long id) {
         return usuarioService.buscarUsuarioPorId(id);
-    }
-
-    @Operation(summary = "Registrar un nuevo usuario")
-    @ApiResponse(responseCode = "201", description = "Usuario registrado exitosamente")
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping
-    public Usuario registrar(@Valid @RequestBody UsuarioRegisterRequest request) {
-        return usuarioService.registrarUsuario(request.getUsername(), request.getPassword(), request.getRol());
     }
 
     @Operation(summary = "Desactivar un usuario")
