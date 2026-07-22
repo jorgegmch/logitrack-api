@@ -12,7 +12,7 @@ import com.jorgegmch.logitrack.repository.ProductoRepository;
 public class ProductoService {
     private final ProductoRepository productoRepository;
 
-    ProductoService(ProductoRepository productoRepository) {
+    public ProductoService(ProductoRepository productoRepository) {
         this.productoRepository = productoRepository;
     }
 
