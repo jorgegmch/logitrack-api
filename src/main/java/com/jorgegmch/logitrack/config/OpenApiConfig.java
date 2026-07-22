@@ -1,0 +1,19 @@
+package com.jorgegmch.logitrack.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+
+@Configuration
+public class OpenApiConfig {
+    @Bean
+    public OpenAPI logitrackOpenAPI() {
+        return new OpenAPI()
+            .info(new Info()
+                .title("LogiTrack API")
+                .description("Sistema de gestión y auditoría de bodegas - LogiTrack S.A.")
+                .version("1.0.0"));
+    }
+}
