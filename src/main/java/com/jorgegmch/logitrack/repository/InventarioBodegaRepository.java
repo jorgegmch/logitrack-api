@@ -10,6 +10,6 @@ import com.jorgegmch.logitrack.entity.InventarioBodega;
 import com.jorgegmch.logitrack.entity.Producto;
 
 public interface InventarioBodegaRepository extends JpaRepository<InventarioBodega, Long> {
-     Optional<InventarioBodega> findByBodegaIdAndProductoId(Bodega bodegaId, Producto productoId);
+    Optional<InventarioBodega> findByBodegaIdAndProductoId(Bodega bodegaId, Producto productoId);
     List<InventarioBodega> findByStockLessThan(Integer stock);
 }
