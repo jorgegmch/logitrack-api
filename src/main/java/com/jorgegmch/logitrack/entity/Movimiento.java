@@ -6,10 +6,12 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jorgegmch.logitrack.entity.enums.TipoMovimiento;
+import com.jorgegmch.logitrack.listener.AuditoriaListener;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
@@ -26,6 +28,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
+@EntityListeners(AuditoriaListener.class)
 @Table(name = "movimiento")
 @Data
 @EqualsAndHashCode(of = "idMovimiento")

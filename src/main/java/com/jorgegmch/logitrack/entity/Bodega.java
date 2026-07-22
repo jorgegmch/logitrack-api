@@ -1,7 +1,10 @@
 package com.jorgegmch.logitrack.entity;
 
+import com.jorgegmch.logitrack.listener.AuditoriaListener;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -14,6 +17,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
+@EntityListeners(AuditoriaListener.class)
 @Table(name = "bodega")
 @Data
 @EqualsAndHashCode(of = "idBodega")

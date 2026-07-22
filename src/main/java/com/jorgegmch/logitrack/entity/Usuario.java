@@ -2,9 +2,11 @@ package com.jorgegmch.logitrack.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jorgegmch.logitrack.entity.enums.Rol;
+import com.jorgegmch.logitrack.listener.AuditoriaListener;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
@@ -18,6 +20,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
+@EntityListeners(AuditoriaListener.class)
 @Table(name = "usuario")
 @Data
 @EqualsAndHashCode(of = "idUsuario")
