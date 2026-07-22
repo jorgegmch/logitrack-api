@@ -12,3 +12,7 @@ spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.format_sql=true
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 spring.jpa.properties.hibernate.default_schema=db_logitrack
+
+# JWT
+jwt.secret=YOUR_BASE64_SECRET_KEY_MIN_256_BITS
+jwt.expiration=86400000
