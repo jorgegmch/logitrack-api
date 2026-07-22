@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jorgegmch.logitrack.entity.enums.TipoMovimiento;
 
 import jakarta.persistence.CascadeType;
@@ -56,5 +57,6 @@ public class Movimiento {
 
     @OneToMany(mappedBy = "movimiento", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
+    @JsonManagedReference
     private List<DetalleMovimiento> detalles = new ArrayList<>();
 }
