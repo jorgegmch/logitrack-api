@@ -1,5 +1,6 @@
 package com.jorgegmch.logitrack.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jorgegmch.logitrack.entity.enums.Rol;
 
 import jakarta.persistence.Column;
@@ -30,6 +31,7 @@ public class Usuario {
     @Column(nullable = false, unique = true)
     private String username;
 
+    @JsonIgnore
     @Column(nullable = false)
     @ToString.Exclude
     private String password;
