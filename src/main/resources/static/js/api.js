@@ -116,3 +116,34 @@ function apiPatch(endpoint, datos) {
 function apiDelete(endpoint) {
     return apiFetch(endpoint, { method: 'DELETE' });
 }
+
+/* ---------- Layout compartido (sidebar, topbar, logout) ---------- */
+
+function inicializarLayoutComun(paginaActual) {
+    document.querySelectorAll('.nav-link').forEach((link) => {
+        if (link.dataset.page === paginaActual) {
+            link.classList.add('active');
+        }
+    });
+
+    if (!esAdmin()) {
+        document.querySelectorAll('.solo-admin').forEach((el) => {
+            el.classList.add('hidden-role');
+        });
+    }
+
+    const badgeUsuario = document.getElementById('userBadge');
+    if (badgeUsuario) {
+        badgeUsuario.textContent = obtenerUsername();
+    }
+
+    const badgeRol = document.getElementById('roleBadge');
+    if (badgeRol) {
+        badgeRol.textContent = obtenerRol();
+    }
+
+    const botonLogout = document.getElementById('logoutButton');
+    if (botonLogout) {
+        botonLogout.addEventListener('click', cerrarSesion);
+    }
+}
