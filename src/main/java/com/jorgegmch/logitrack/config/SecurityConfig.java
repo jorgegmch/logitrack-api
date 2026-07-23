@@ -57,9 +57,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/productos/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/bodegas/**").hasRole("ADMIN")
                         .requestMatchers("/usuarios/*/desactivar", "/usuarios/*/reactivar").hasRole("ADMIN")
+                        .requestMatchers("/usuarios/**").hasRole("ADMIN")
 
                         .requestMatchers("/bodegas/**", "/productos/**", "/movimientos/**",
-                                "/inventario/**", "/usuarios/**", "/auditorias/**", "/reportes/**").authenticated()
+                                "/inventario/**", "/auditorias/**", "/reportes/**").authenticated()
                         .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
