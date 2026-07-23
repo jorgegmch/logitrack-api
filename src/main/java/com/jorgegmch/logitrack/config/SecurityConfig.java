@@ -49,15 +49,14 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/auth/login").permitAll()
+                        .requestMatchers("/auth/register").hasRole("ADMIN")
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
 
-                        // Restricciones por rol - deben ir ANTES de las reglas generales
                         .requestMatchers(HttpMethod.DELETE, "/productos/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/bodegas/**").hasRole("ADMIN")
                         .requestMatchers("/usuarios/*/desactivar", "/usuarios/*/reactivar").hasRole("ADMIN")
 
-                        // Reglas generales - cualquier usuario autenticado
                         .requestMatchers("/bodegas/**", "/productos/**", "/movimientos/**",
                                 "/inventario/**", "/usuarios/**", "/auditorias/**", "/reportes/**").authenticated()
                         .anyRequest().authenticated())
