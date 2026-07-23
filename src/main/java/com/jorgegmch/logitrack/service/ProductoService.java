@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.jorgegmch.logitrack.entity.Producto;
 import com.jorgegmch.logitrack.repository.ProductoRepository;
@@ -46,6 +47,7 @@ public class ProductoService {
         return productoRepository.save(new Producto(null, nombre.trim().toUpperCase(), categoriaFinal, precio));
     }
 
+    @Transactional
     public Producto actualizarProducto(Long id, String nombre, String categoria, BigDecimal precio) {
         Producto producto = buscarProductoPorId(id);
 

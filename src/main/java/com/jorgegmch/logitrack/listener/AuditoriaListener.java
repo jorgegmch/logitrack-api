@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -14,8 +16,8 @@ import com.jorgegmch.logitrack.config.ApplicationContextProvider;
 import com.jorgegmch.logitrack.entity.Auditoria;
 import com.jorgegmch.logitrack.entity.Usuario;
 import com.jorgegmch.logitrack.entity.enums.TipoOperacion;
-import com.jorgegmch.logitrack.repository.AuditoriaRepository;
 import com.jorgegmch.logitrack.repository.UsuarioRepository;
+import com.jorgegmch.logitrack.service.AuditoriaService;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.PostLoad;
@@ -56,32 +58,58 @@ public class AuditoriaListener {
     }
 
     private void registrarAuditoria(Object entidad, TipoOperacion tipo, String valoresAnteriores, String valoresNuevos) {
-        Usuario usuarioActual = obtenerUsuarioActual();
-        if (usuarioActual == null) {
-            return;
-        }
-
-        Auditoria auditoria = new Auditoria();
-        auditoria.setTipoOperacion(tipo);
-        auditoria.setFechaHora(LocalDateTime.now());
-        auditoria.setUsuarioId(usuarioActual);
-        auditoria.setEntidadAfectada(entidad.getClass().getSimpleName());
-        auditoria.setValoresAnteriores(valoresAnteriores);
-        auditoria.setValoresNuevos(valoresNuevos);
-
-        AuditoriaRepository auditoriaRepository = ApplicationContextProvider.obtenerBean(AuditoriaRepository.class);
-        auditoriaRepository.save(auditoria);
-    }
-
-    private Usuario obtenerUsuarioActual() {
         Authentication autenticacion = SecurityContextHolder.getContext().getAuthentication();
         if (autenticacion == null || !autenticacion.isAuthenticated()) {
-            return null;
+            System.out.println("[AUDITORIA-DEBUG] No hay autenticación activa, se omite el registro.");
+            return;
         }
-
         String username = autenticacion.getName();
-        UsuarioRepository usuarioRepository = ApplicationContextProvider.obtenerBean(UsuarioRepository.class);
-        return usuarioRepository.findByUsername(username).orElse(null);
+        System.out.println("[AUDITORIA-DEBUG] Usuario autenticado detectado: " + username);
+
+        String entidadAfectada = entidad.getClass().getSimpleName();
+        LocalDateTime fechaHora = LocalDateTime.now();
+
+        Runnable tareaDespuesDelCommit = () -> {
+            System.out.println("[AUDITORIA-DEBUG] Ejecutando tarea after-commit para: " + entidadAfectada);
+            UsuarioRepository usuarioRepository = ApplicationContextProvider.obtenerBean(UsuarioRepository.class);
+            Usuario usuario = usuarioRepository.findByUsername(username).orElse(null);
+
+            if (usuario == null) {
+                System.out.println("[AUDITORIA-DEBUG] ERROR: no se encontró usuario con username: " + username);
+                return;
+            }
+            System.out.println("[AUDITORIA-DEBUG] Usuario encontrado: " + usuario.getUsername() + ", guardando auditoria...");
+
+            Auditoria auditoria = new Auditoria();
+            auditoria.setTipoOperacion(tipo);
+            auditoria.setFechaHora(fechaHora);
+            auditoria.setUsuarioId(usuario);
+            auditoria.setEntidadAfectada(entidadAfectada);
+            auditoria.setValoresAnteriores(valoresAnteriores);
+            auditoria.setValoresNuevos(valoresNuevos);
+
+            try {
+                AuditoriaService auditoriaService = ApplicationContextProvider.obtenerBean(AuditoriaService.class);
+                auditoriaService.guardarAuditoria(auditoria);
+                System.out.println("[AUDITORIA-DEBUG] Auditoria guardada exitosamente.");
+            } catch (Exception e) {
+                System.out.println("[AUDITORIA-DEBUG] EXCEPCION al guardar: " + e.getClass().getSimpleName() + " - " + e.getMessage());
+                e.printStackTrace();
+            }
+        };
+
+        if (TransactionSynchronizationManager.isSynchronizationActive()) {
+            System.out.println("[AUDITORIA-DEBUG] Sincronización de transacción activa, registrando callback afterCommit.");
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    tareaDespuesDelCommit.run();
+                }
+            });
+        } else {
+            System.out.println("[AUDITORIA-DEBUG] Sin sincronización activa, ejecutando inmediatamente.");
+            tareaDespuesDelCommit.run();
+        }
     }
 
     private String clave(Object entidad) {

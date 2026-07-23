@@ -3,6 +3,8 @@ package com.jorgegmch.logitrack.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.jorgegmch.logitrack.entity.Auditoria;
 import com.jorgegmch.logitrack.entity.Usuario;
@@ -40,5 +42,10 @@ public class AuditoriaService {
             throw new IllegalArgumentException("Debe especificar un tipo de operación");
         }
         return auditoriaRepository.findByTipoOperacion(tipoOperacion);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void guardarAuditoria(Auditoria auditoria) {
+        auditoriaRepository.save(auditoria);
     }
 }
