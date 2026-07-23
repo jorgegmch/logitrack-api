@@ -32,6 +32,7 @@ public class ProductoService {
         return producto;
     }
 
+    @Transactional
     public Producto crearProducto(String nombre, String categoria, BigDecimal precio) {
         if (nombre == null || nombre.trim().isEmpty()) {
             throw new IllegalArgumentException("El producto debe tener un nombre");
@@ -70,6 +71,7 @@ public class ProductoService {
         return productoRepository.save(producto);
     }
 
+    @Transactional
     public void eliminarProducto(Long id) {
         buscarProductoPorId(id);
         productoRepository.deleteById(id);

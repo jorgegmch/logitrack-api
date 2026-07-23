@@ -3,6 +3,7 @@ package com.jorgegmch.logitrack.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.jorgegmch.logitrack.entity.Bodega;
 import com.jorgegmch.logitrack.entity.Usuario;
@@ -34,6 +35,7 @@ public class BodegaService {
         return bodega;
     }
 
+    @Transactional
     public Bodega crearBodega(String nombre, String ubicacion, Integer capacidad, Long encargadoId) {
         if (nombre == null || nombre.trim().isEmpty()) {
             throw new IllegalArgumentException("La bodega debe tener un nombre");
@@ -55,6 +57,7 @@ public class BodegaService {
         return bodegaRepository.save(new Bodega(null, nombre.trim().toUpperCase(), ubicacion.trim().toUpperCase(), capacidad, encargado));
     }
 
+    @Transactional
     public Bodega actualizarBodega(Long id, String nombre, String ubicacion, Integer capacidad, Long encargadoId) {
         Bodega bodega = buscarBodegaPorId(id);
 
@@ -84,6 +87,7 @@ public class BodegaService {
         return bodegaRepository.save(bodega);
     }
 
+    @Transactional
     public void eliminarBodega(Long id) {
         buscarBodegaPorId(id);
         bodegaRepository.deleteById(id);

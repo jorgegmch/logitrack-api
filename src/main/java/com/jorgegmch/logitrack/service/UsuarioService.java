@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.jorgegmch.logitrack.entity.Usuario;
 import com.jorgegmch.logitrack.entity.enums.Rol;
@@ -63,6 +64,7 @@ public class UsuarioService implements UserDetailsService {
         return usuarioId;
     }
 
+    @Transactional
     public Usuario registrarUsuario(String username, String password, Rol rol) {
         if (username == null || username.trim().isEmpty()) {
             throw new IllegalArgumentException("El usuario debe tener un username");
@@ -85,6 +87,7 @@ public class UsuarioService implements UserDetailsService {
         return usuarioRepository.save(usuario);
     }
 
+    @Transactional
     public Usuario desactivarUsuario(Long id) {
         Usuario usuario = buscarUsuarioPorId(id);
         if (!usuario.getActivo()) {
@@ -94,6 +97,7 @@ public class UsuarioService implements UserDetailsService {
         return usuarioRepository.save(usuario);
     }
 
+    @Transactional
     public Usuario reactivarUsuario(Long id) {
         Usuario usuario = buscarUsuarioPorId(id);
         if (usuario.getActivo()) {
