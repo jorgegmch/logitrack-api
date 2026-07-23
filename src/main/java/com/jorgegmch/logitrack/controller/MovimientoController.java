@@ -1,13 +1,16 @@
 package com.jorgegmch.logitrack.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -42,6 +45,14 @@ public class MovimientoController {
     @GetMapping("/{id}")
     public Movimiento buscarPorId(@PathVariable("id") Long id) {
         return movimientoService.buscarMovimientoPorId(id);
+    }
+
+    @Operation(summary = "Listar movimientos por rango de fechas")
+    @GetMapping("/rango")
+    public List<Movimiento> listarPorRango(
+            @RequestParam("desde") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime desde,
+            @RequestParam("hasta") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime hasta) {
+        return movimientoService.listarMovimientosPorRango(desde, hasta);
     }
 
     @Operation(summary = "Registrar un nuevo movimiento (entrada, salida o transferencia)")

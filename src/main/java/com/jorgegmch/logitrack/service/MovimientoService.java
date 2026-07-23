@@ -53,6 +53,16 @@ public class MovimientoService {
         return movimiento;
     }
 
+    public List<Movimiento> listarMovimientosPorRango(LocalDateTime desde, LocalDateTime hasta) {
+        if (desde == null || hasta == null) {
+            throw new IllegalArgumentException("Debe especificar fecha de inicio y fecha de fin");
+        }
+        if (desde.isAfter(hasta)) {
+            throw new IllegalArgumentException("La fecha de inicio no puede ser posterior a la fecha de fin");
+        }
+        return movimientoRepository.findByFechaBetween(desde, hasta);
+    }
+
     @Transactional
     public Movimiento registrarMovimiento(TipoMovimiento tipo, Long usuarioId, Long bodegaOrigenId,
             Long bodegaDestinoId, List<Long> productoIds, List<Integer> cantidades) {
