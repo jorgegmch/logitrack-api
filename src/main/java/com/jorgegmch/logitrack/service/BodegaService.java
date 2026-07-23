@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.jorgegmch.logitrack.entity.Bodega;
 import com.jorgegmch.logitrack.entity.Usuario;
+import com.jorgegmch.logitrack.exception.RecursoNoEncontradoException;
 import com.jorgegmch.logitrack.repository.BodegaRepository;
 import com.jorgegmch.logitrack.repository.UsuarioRepository;
 
@@ -30,7 +31,7 @@ public class BodegaService {
         }
         Bodega bodega = bodegaRepository.findById(id).orElse(null);
         if (bodega == null) {
-            throw new RuntimeException("Bodega no encontrada con el id: " + id);
+            throw new RecursoNoEncontradoException("Bodega no encontrada con el id: " + id);
         }
         return bodega;
     }
@@ -50,7 +51,7 @@ public class BodegaService {
         if (encargadoId != null) {
             encargado = usuarioRepository.findById(encargadoId).orElse(null);
             if (encargado == null) {
-                throw new RuntimeException("Usuario encargado no encontrado con id: " + encargadoId);
+                throw new RecursoNoEncontradoException("Usuario encargado no encontrado con id: " + encargadoId);
             }
         }
 
@@ -75,7 +76,7 @@ public class BodegaService {
         if (encargadoId != null) {
             encargado = usuarioRepository.findById(encargadoId).orElse(null);
             if (encargado == null) {
-                throw new RuntimeException("Usuario encargado no encontrado con id: " + encargadoId);
+                throw new RecursoNoEncontradoException("Usuario encargado no encontrado con id: " + encargadoId);
             }
         }
 

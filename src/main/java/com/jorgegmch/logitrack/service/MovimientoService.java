@@ -13,6 +13,7 @@ import com.jorgegmch.logitrack.entity.Movimiento;
 import com.jorgegmch.logitrack.entity.Producto;
 import com.jorgegmch.logitrack.entity.Usuario;
 import com.jorgegmch.logitrack.entity.enums.TipoMovimiento;
+import com.jorgegmch.logitrack.exception.RecursoNoEncontradoException;
 import com.jorgegmch.logitrack.repository.BodegaRepository;
 import com.jorgegmch.logitrack.repository.InventarioBodegaRepository;
 import com.jorgegmch.logitrack.repository.MovimientoRepository;
@@ -47,7 +48,7 @@ public class MovimientoService {
         }
         Movimiento movimiento = movimientoRepository.findById(id).orElse(null);
         if (movimiento == null) {
-            throw new RuntimeException("Movimiento no encontrado con id: " + id);
+            throw new RecursoNoEncontradoException("Movimiento no encontrado con id: " + id);
         }
         return movimiento;
     }
@@ -71,7 +72,7 @@ public class MovimientoService {
 
         Usuario usuario = usuarioRepository.findById(usuarioId).orElse(null);
         if (usuario == null) {
-            throw new RuntimeException("Usuario no encontrado con id: " + usuarioId);
+            throw new RecursoNoEncontradoException("Usuario no encontrado con id: " + usuarioId);
         }
 
         Bodega bodegaOrigen = null;
@@ -118,7 +119,7 @@ public class MovimientoService {
 
             Producto producto = productoRepository.findById(productoId).orElse(null);
             if (producto == null) {
-                throw new RuntimeException("Producto no encontrado con id: " + productoId);
+                throw new RecursoNoEncontradoException("Producto no encontrado con id: " + productoId);
             }
 
             DetalleMovimiento detalle = new DetalleMovimiento();
@@ -143,7 +144,7 @@ public class MovimientoService {
     private Bodega buscarBodega(Long id) {
         Bodega bodega = bodegaRepository.findById(id).orElse(null);
         if (bodega == null) {
-            throw new RuntimeException("Bodega no encontrada con id: " + id);
+            throw new RecursoNoEncontradoException("Bodega no encontrada con id: " + id);
         }
         return bodega;
     }

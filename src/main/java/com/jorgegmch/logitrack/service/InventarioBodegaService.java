@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.jorgegmch.logitrack.entity.InventarioBodega;
+import com.jorgegmch.logitrack.exception.RecursoNoEncontradoException;
 import com.jorgegmch.logitrack.repository.InventarioBodegaRepository;
 
 @Service
@@ -25,7 +26,7 @@ public class InventarioBodegaService {
         }
         InventarioBodega inventarioBodega = inventarioBodegaRepository.findById(id).orElse(null);
         if (inventarioBodega == null) {
-            throw new RuntimeException("Registro d inventario no encontrado con el id: " + id);
+            throw new RecursoNoEncontradoException("Registro d inventario no encontrado con el id: " + id);
         }
         return inventarioBodega;
     }

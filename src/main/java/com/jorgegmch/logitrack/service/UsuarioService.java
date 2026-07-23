@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.jorgegmch.logitrack.entity.Usuario;
 import com.jorgegmch.logitrack.entity.enums.Rol;
+import com.jorgegmch.logitrack.exception.RecursoNoEncontradoException;
 import com.jorgegmch.logitrack.repository.UsuarioRepository;
 
 @Service
@@ -48,7 +49,7 @@ public class UsuarioService implements UserDetailsService {
         }
         Usuario usuario = usuarioRepository.findByUsername(username).orElse(null);
         if (usuario == null) {
-            throw new RuntimeException("El usuario " + username + " no se encuentra registrado");
+            throw new RecursoNoEncontradoException("El usuario " + username + " no se encuentra registrado");
         }
         return usuario;
     }
@@ -59,7 +60,7 @@ public class UsuarioService implements UserDetailsService {
         }
         Usuario usuarioId = usuarioRepository.findById(id).orElse(null);
         if (usuarioId == null) {
-            throw new RuntimeException("Usuario no encontrado con id: " + id);
+            throw new RecursoNoEncontradoException("Usuario no encontrado con id: " + id);
         }
         return usuarioId;
     }

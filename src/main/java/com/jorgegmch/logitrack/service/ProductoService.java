@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jorgegmch.logitrack.entity.Producto;
+import com.jorgegmch.logitrack.exception.RecursoNoEncontradoException;
 import com.jorgegmch.logitrack.repository.ProductoRepository;
 
 @Service
@@ -27,7 +28,7 @@ public class ProductoService {
         }
         Producto producto = productoRepository.findById(id).orElse(null);
         if (producto == null) {
-            throw new RuntimeException("Producto no encontrado con id: " + id);
+            throw new RecursoNoEncontradoException("Producto no encontrado con id: " + id);
         }
         return producto;
     }

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.jorgegmch.logitrack.entity.Auditoria;
 import com.jorgegmch.logitrack.entity.Usuario;
 import com.jorgegmch.logitrack.entity.enums.TipoOperacion;
+import com.jorgegmch.logitrack.exception.RecursoNoEncontradoException;
 import com.jorgegmch.logitrack.repository.AuditoriaRepository;
 import com.jorgegmch.logitrack.repository.UsuarioRepository;
 
@@ -32,7 +33,7 @@ public class AuditoriaService {
         }
         Usuario usuario = usuarioRepository.findById(usuarioId).orElse(null);
         if (usuario == null) {
-            throw new RuntimeException("Usuario no encontrado con id: " + usuarioId);
+            throw new RecursoNoEncontradoException("Usuario no encontrado con id: " + usuarioId);
         }
         return auditoriaRepository.findByUsuarioId(usuario);
     }
