@@ -1,8 +1,19 @@
 /*
 auditorias.js - Consulta de auditoria (solo lectura). Pagina exclusiva ADMIN.
+El detalle de valoresAnteriores/valoresNuevos se muestra como diff
+campo por campo, en vez de JSON crudo.
 */
 
-let auditoriaSeleccionParaDetalle = [];
+const ETIQUETAS_CAMPOS = {
+    idProducto: 'ID Producto', idBodega: 'ID Bodega', idUsuario: 'ID Usuario',
+    idMovimiento: 'ID Movimiento', idDetMov: 'ID Detalle',
+    nombre: 'Nombre', categoria: 'Categoría', precio: 'Precio',
+    ubicacion: 'Ubicación', capacidad: 'Capacidad', encargadoId: 'Encargado',
+    username: 'Usuario', password: 'Contraseña', rol: 'Rol', activo: 'Activo',
+    fecha: 'Fecha', tipo: 'Tipo', usuarioId: 'Responsable',
+    bodegaOrigenId: 'Bodega origen', bodegaDestinoId: 'Bodega destino',
+    detalles: 'Detalle de productos', cantidad: 'Cantidad', stock: 'Stock',
+};
 
 function mostrarErrorAuditorias(mensaje) {
     const alerta = document.getElementById('auditoriasAlert');
@@ -26,15 +37,98 @@ function formatearFecha(fechaIso) {
     return fecha.toLocaleString('es-CO', { dateStyle: 'short', timeStyle: 'short' });
 }
 
-function formatearJson(texto) {
-    if (!texto) {
+function etiquetaCampo(clave) {
+    return ETIQUETAS_CAMPOS[clave] || clave;
+}
+
+function esArrayDeFecha(valor) {
+    return Array.isArray(valor) && valor.length >= 6 && valor.every((n) => typeof n === 'number');
+}
+
+function formatearArrayFecha(valor) {
+    const [anio, mes, dia, hora, minuto, segundo] = valor;
+    const fecha = new Date(anio, mes - 1, dia, hora, minuto, segundo || 0);
+    return fecha.toLocaleString('es-CO', { dateStyle: 'short', timeStyle: 'short' });
+}
+
+function formatearDetalleMovimiento(detalles) {
+    return detalles
+        .map((d) => {
+            const nombreProducto = d.productoId ? d.productoId.nombre : 'Producto desconocido';
+            return `${nombreProducto} × ${d.cantidad}`;
+        })
+        .join(', ');
+}
+
+function formatearValorCampo(valor, clave) {
+    if (valor === null || valor === undefined) {
         return '—';
     }
-    try {
-        return JSON.stringify(JSON.parse(texto), null, 2);
-    } catch (error) {
-        return texto;
+    if (typeof valor === 'boolean') {
+        return valor ? 'Sí' : 'No';
     }
+    if (esArrayDeFecha(valor)) {
+        return formatearArrayFecha(valor);
+    }
+    if (Array.isArray(valor)) {
+        if (valor.length === 0) {
+            return '—';
+        }
+        if (clave === 'detalles') {
+            return formatearDetalleMovimiento(valor);
+        }
+        return valor.map((item) => formatearValorCampo(item)).join('; ');
+    }
+    if (typeof valor === 'object') {
+        return valor.nombre || valor.username || valor.idProducto || valor.idBodega || valor.idUsuario || JSON.stringify(valor);
+    }
+    return String(valor);
+}
+
+function parsearJsonSeguro(texto) {
+    if (!texto) {
+        return null;
+    }
+    try {
+        return JSON.parse(texto);
+    } catch (error) {
+        return null;
+    }
+}
+
+function renderizarTablaDetalle(anteriorObj, nuevoObj) {
+    const tbody = document.getElementById('tablaDetalleCampos');
+    tbody.innerHTML = '';
+
+    const claves = new Set([
+        ...Object.keys(anteriorObj || {}),
+        ...Object.keys(nuevoObj || {}),
+    ]);
+
+    if (claves.size === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" class="empty-state">Sin datos disponibles</td></tr>';
+        return;
+    }
+
+    claves.forEach((clave) => {
+        if (clave === 'password') {
+            return;
+        }
+
+        const valorAnterior = anteriorObj ? anteriorObj[clave] : undefined;
+        const valorNuevo = nuevoObj ? nuevoObj[clave] : undefined;
+        const textoAnterior = formatearValorCampo(valorAnterior, clave);
+        const textoNuevo = formatearValorCampo(valorNuevo, clave);
+        const cambio = textoAnterior !== textoNuevo;
+
+        const fila = document.createElement('tr');
+        fila.innerHTML = `
+            <td>${etiquetaCampo(clave)}</td>
+            <td>${anteriorObj ? textoAnterior : '—'}</td>
+            <td>${cambio ? `<strong style="color: var(--accent);">${textoNuevo}</strong>` : textoNuevo}</td>
+        `;
+        tbody.appendChild(fila);
+    });
 }
 
 function renderizarTablaAuditorias(auditorias) {
@@ -72,8 +166,10 @@ function mostrarDetalle(id, auditorias) {
         return;
     }
 
-    document.getElementById('detalleAnteriores').textContent = formatearJson(auditoria.valoresAnteriores);
-    document.getElementById('detalleNuevos').textContent = formatearJson(auditoria.valoresNuevos);
+    const anteriorObj = parsearJsonSeguro(auditoria.valoresAnteriores);
+    const nuevoObj = parsearJsonSeguro(auditoria.valoresNuevos);
+
+    renderizarTablaDetalle(anteriorObj, nuevoObj);
     document.getElementById('modalDetalleAuditoria').classList.add('show');
 }
 
