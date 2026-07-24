@@ -282,7 +282,7 @@ a:hover {
     color: var(--accent);
 }
 
-.nav-link.hidden-role {
+.hidden-role {
     display: none;
 }
 
