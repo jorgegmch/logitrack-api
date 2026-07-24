@@ -53,7 +53,7 @@ public class AuthController {
         Usuario usuario = usuarioService.buscarUsuarioPorUsername(request.getUsername());
         String token = jwtService.generarToken(usuario.getUsername(), usuario.getRol().name());
 
-        return new LoginResponse(token, usuario.getUsername(), usuario.getRol().name());
+        return new LoginResponse(usuario.getIdUsuario(), token, usuario.getUsername(), usuario.getRol().name());
     }
 
     @Operation(summary = "Registrar un nuevo usuario")
