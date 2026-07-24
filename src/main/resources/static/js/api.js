@@ -1,4 +1,4 @@
-/**
+/*
 api.js — Modulo central de comunicacion con la API de LogiTrack.
 Maneja el token JWT, las llamadas fetch, y el manejo de errores HTTP.
 */
@@ -8,13 +8,19 @@ const API_BASE_URL = '';
 const TOKEN_KEY = 'logitrack_token';
 const USERNAME_KEY = 'logitrack_username';
 const ROL_KEY = 'logitrack_rol';
+const ID_USUARIO_KEY = 'logitrack_id_usuario';
 
 /* ---------- Manejo de sesion ---------- */
 
-function guardarSesion(token, username, rol) {
+function guardarSesion(idUsuario, token, username, rol) {
+    localStorage.setItem(ID_USUARIO_KEY, idUsuario);
     localStorage.setItem(TOKEN_KEY, token);
     localStorage.setItem(USERNAME_KEY, username);
     localStorage.setItem(ROL_KEY, rol);
+}
+
+function obtenerIdUsuario() {
+    return localStorage.getItem(ID_USUARIO_KEY);
 }
 
 function obtenerToken() {
@@ -34,6 +40,7 @@ function esAdmin() {
 }
 
 function cerrarSesion() {
+    localStorage.removeItem(ID_USUARIO_KEY);
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USERNAME_KEY);
     localStorage.removeItem(ROL_KEY);

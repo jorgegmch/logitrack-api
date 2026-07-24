@@ -39,7 +39,7 @@ async function manejarSubmitLogin(evento) {
 
     try {
         const respuesta = await apiPost('/auth/login', { username, password });
-        guardarSesion(respuesta.token, respuesta.username, respuesta.rol);
+        guardarSesion(respuesta.idUsuario, respuesta.token, respuesta.username, respuesta.rol);
         window.location.href = '/html/dashboard.html';
     } catch (error) {
         mostrarErrorLogin(error.message);
