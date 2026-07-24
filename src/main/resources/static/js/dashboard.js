@@ -51,13 +51,99 @@ function renderizarUltimosMovimientos(movimientos) {
     });
 }
 
+function obtenerColorAcento() {
+    return getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+}
+
+function obtenerColorTexto() {
+    return getComputedStyle(document.documentElement).getPropertyValue('--text-muted').trim();
+}
+
+function renderizarGraficoStockPorBodega(datos) {
+    const ctx = document.getElementById('chartStockBodega');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: datos.map((item) => item.nombreBodega),
+            datasets: [{
+                label: 'Stock total',
+                data: datos.map((item) => item.stockTotal),
+                backgroundColor: obtenerColorAcento(),
+                borderRadius: 6,
+            }],
+        },
+        options: {
+            responsive: true,
+            animation: {
+                duration: 900,
+                easing: 'easeOutQuart',
+            },
+            plugins: {
+                legend: { display: false },
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { color: obtenerColorTexto() },
+                    grid: { color: 'rgba(148, 163, 184, 0.15)' },
+                },
+                x: {
+                    ticks: { color: obtenerColorTexto() },
+                    grid: { display: false },
+                },
+            },
+        },
+    });
+}
+
+function renderizarGraficoProductosMovidos(datos) {
+    const ctx = document.getElementById('chartProductosMovidos');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: datos.map((item) => item.nombreProducto),
+            datasets: [{
+                label: 'Cantidad movida',
+                data: datos.map((item) => item.cantidadTotalMovida),
+                backgroundColor: obtenerColorAcento(),
+                borderRadius: 6,
+            }],
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            animation: {
+                duration: 900,
+                easing: 'easeOutQuart',
+            },
+            plugins: {
+                legend: { display: false },
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    ticks: { color: obtenerColorTexto() },
+                    grid: { color: 'rgba(148, 163, 184, 0.15)' },
+                },
+                y: {
+                    ticks: { color: obtenerColorTexto() },
+                    grid: { display: false },
+                },
+            },
+        },
+    });
+}
+
 async function cargarDashboard() {
     try {
-        const [productos, bodegas, stockBajo, movimientos] = await Promise.all([
+        const [productos, bodegas, stockBajo, movimientos, resumen] = await Promise.all([
             apiGet('/productos'),
             apiGet('/bodegas'),
             apiGet('/inventario/stock-bajo?limite=10'),
             apiGet('/movimientos'),
+            apiGet('/reportes/resumen'),
         ]);
 
         document.getElementById('statProductos').textContent = productos.length;
@@ -66,6 +152,8 @@ async function cargarDashboard() {
         document.getElementById('statMovimientos').textContent = movimientos.length;
 
         renderizarUltimosMovimientos(movimientos);
+        renderizarGraficoStockPorBodega(resumen.stockTotalPorBodega);
+        renderizarGraficoProductosMovidos(resumen.productosMasMovidos);
     } catch (error) {
         mostrarErrorDashboard(error.message);
     }

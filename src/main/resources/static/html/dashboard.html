@@ -60,6 +60,22 @@
                     </div>
                 </div>
 
+                <div class="stat-grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Stock total por bodega</span>
+                        </div>
+                        <canvas id="chartStockBodega" height="220"></canvas>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Productos más movidos</span>
+                        </div>
+                        <canvas id="chartProductosMovidos" height="220"></canvas>
+                    </div>
+                </div>
+
                 <div class="card">
                     <div class="card-header">
                         <span class="card-title">Últimos movimientos</span>
@@ -85,6 +101,7 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
     <script src="/js/theme.js"></script>
     <script src="/js/api.js"></script>
     <script src="/js/dashboard.js"></script>
