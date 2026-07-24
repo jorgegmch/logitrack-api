@@ -14,9 +14,6 @@ public class MovimientoRequest {
     @NotNull(message = "El tipo de movimiento es obligatorio")
     private TipoMovimiento tipo;
 
-    @NotNull(message = "El usuario responsable es obligatorio")
-    private Long usuarioId;
-
     private Long bodegaOrigenId;
 
     private Long bodegaDestinoId;
